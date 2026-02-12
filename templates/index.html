@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grocery Store Inventory DSS</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 40px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #eaeaea;
+        }
+        .alert {
+            background-color: #ffd6d6;
+        }
+        .sell-box {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #aaa;
+            width: 60%;
+        }
+        button {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Grocery Store Inventory Decision Support System</h1>
+<a href="/hrm">
+    <button style="background-color:#27ae60;color:white;padding:10px 18px;border:none;border-radius:6px;font-size:15px;">
+        Go to Human Resource Management
+    </button>
+</a>
+
+
+<!-- SELL PRODUCT -->
+<div class="sell-box">
+    <h2>Sell Product</h2>
+    <form method="POST" action="/sell">
+        <label>Product ID:</label>
+        <input type="number" name="product_id" required>
+        &nbsp;&nbsp;
+        <label>Quantity Sold:</label>
+        <input type="number" name="quantity" required>
+        &nbsp;&nbsp;
+        <button type="submit">Sell</button>
+    </form>
+</div>
+
+<!-- RESTOCK PRODUCT -->
+<div class="sell-box">
+    <h2>Restock Product</h2>
+    <form method="POST" action="/add">
+        <label>Product ID:</label>
+        <input type="number" name="product_id" required>
+        &nbsp;&nbsp;
+        <label>Quantity Restocked:</label>
+        <input type="number" name="quantity" required>
+        &nbsp;&nbsp;
+        <button type="submit">Add</button>
+    </form>
+</div>
+
+<!-- INVENTORY TABLE -->
+<h2>Current Inventory</h2>
+<table>
+    <tr>
+        <th>Product ID</th>
+        <th>Product Name</th>
+        <th>Category</th>
+        <th>Current Stock</th>
+        <th>Threshold</th>
+    </tr>
+    {% for item in inventory %}
+    <tr>
+        <td>{{ item["Product_ID"] }}</td>
+        <td>{{ item["Product_Name"] }}</td>
+        <td>{{ item["Category"] }}</td>
+        <td>{{ item["Current_Stock"] }}</td>
+        <td>{{ item["Threshold"] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<!-- SALES SUMMARY -->
+<h2>Sales Summary by Date</h2>
+<form method="POST">
+    <label>Select Date:</label>
+    <input type="date" name="sale_date" required>
+    &nbsp;&nbsp;
+    <button type="submit">View Sales</button>
+</form>
+
+{% if sales %}
+<table>
+    <tr>
+        <th>Product ID</th>
+        <th>Total Quantity Sold</th>
+    </tr>
+    {% for item in sales %}
+    <tr>
+        <td>{{ item["Product_ID"] }}</td>
+        <td>{{ item["Quantity Sold"] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+<!-- LOW STOCK ALERT -->
+<h2>⚠️ Low Stock Alerts</h2>
+<table>
+    <tr>
+        <th>Product ID</th>
+        <th>Product Name</th>
+        <th>Current Stock</th>
+        <th>Threshold</th>
+    </tr>
+    {% for item in alerts %}
+    <tr class="alert">
+        <td>{{ item["Product_ID"] }}</td>
+        <td>{{ item["Product_Name"] }}</td>
+        <td>{{ item["Current_Stock"] }}</td>
+        <td>{{ item["Threshold"] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Product Classification Based on Sales Frequency</h2>
+
+<table>
+    <tr>
+        <th>Product ID</th>
+        <th>Product Name</th>
+        <th>Average Daily Sales</th>
+        <th>Movement Category</th>
+    </tr>
+    {% for item in classification %}
+    <tr>
+        <td>{{ item["Product_ID"] }}</td>
+        <td>{{ item["Product_Name"] }}</td>
+        <td>{{ "%.2f"|format(item["Avg Daily Sales"]) }}</td>
+        <td>{{ item["Category"] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Restock Recommendations</h2>
+<table>
+    <tr>
+        <th>Product ID</th>
+        <th>Product Name</th>
+        <th>Current Stock</th>
+        <th>Threshold</th>
+        <th>Status</th>
+    </tr>
+    {% for item in restock %}
+    <tr>
+        <td>{{ item["Product_ID"] }}</td>
+        <td>{{ item["Product_Name"] }}</td>
+        <td>{{ item["Current_Stock"] }}</td>
+        <td>{{ item["Threshold"] }}</td>
+        <td>{{ item["Recommendation"] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Decision Support System Output</h2>
+
+<table>
+    <tr>
+        <th>Product ID</th>
+        <th>Product Name</th>
+        <th>Current Stock</th>
+        <th>Total Sales</th>
+        <th>Threshold</th>
+        <th>Decision</th>
+    </tr>
+    {% for item in dss %}
+    <tr>
+        <td>{{ item["Product_ID"] }}</td>
+        <td>{{ item["Product_Name"] }}</td>
+        <td>{{ item["Current_Stock"] }}</td>
+        <td>{{ item["Quantity Sold"] }}</td>
+        <td>{{ item["Threshold"] }}</td>
+        <td>{{ item["Decision"] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="/export_dss">
+    <button>Export DSS Output to Excel</button>
+</a>
+
+
+</body>
+</html>
+

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Human Resource Management</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        input, select, button {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        button {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .back {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<a href="/" class="back">
+    <button>⬅ Back to Inventory</button>
+</a>
+
+<h1>Human Resource Management System</h1>
+
+<div class="card">
+<h2>Add Employee</h2>
+<form method="POST" action="/add_employee">
+    <input name="emp_id" placeholder="ID" required>
+    <input name="name" placeholder="Name" required>
+    <input name="role" placeholder="Role" required>
+    <input name="salary" placeholder="Salary" required>
+    <button>Add</button>
+</form>
+</div>
+
+<div class="card">
+<h2>Mark Attendance</h2>
+<form method="POST" action="/mark_attendance">
+    <input name="emp_id" placeholder="ID" required>
+    <input name="name" placeholder="Name" required>
+    <select name="status">
+        <option>Present</option>
+        <option>Absent</option>
+    </select>
+    <button>Submit</button>
+</form>
+</div>
+
+<div class="card">
+<h2>Process Payroll</h2>
+<form method="POST" action="/process_payroll">
+    <input name="emp_id" placeholder="ID" required>
+    <input name="name" placeholder="Name" required>
+    <input name="month" placeholder="Month" required>
+    <input name="salary" placeholder="Salary" required>
+    <input name="bonus" placeholder="Bonus" required>
+    <button>Process</button>
+</form>
+</div>
+
+<div class="card">
+<h2>Performance Evaluation</h2>
+<form method="POST" action="/evaluate">
+    <input name="emp_id" placeholder="ID" required>
+    <input name="name" placeholder="Name" required>
+    <input name="rating" placeholder="Rating (1-5)" required>
+    <input name="remarks" placeholder="Remarks">
+    <button>Save</button>
+</form>
+</div>
+
+<div class="card">
+<h2>Employees</h2>
+<table>
+<tr><th>ID</th><th>Name</th><th>Role</th><th>Salary</th></tr>
+{% for e in employees %}
+<tr>
+<td>{{ e["Employee_ID"] }}</td>
+<td>{{ e["Name"] }}</td>
+<td>{{ e["Role"] }}</td>
+<td>{{ e["Salary"] }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+<div class="card">
+<h2>Attendance Records</h2>
+<table>
+<tr><th>ID</th><th>Name</th><th>Date</th><th>Status</th></tr>
+{% for a in attendance %}
+<tr>
+<td>{{ a["Employee_ID"] }}</td>
+<td>{{ a["Name"] }}</td>
+<td>{{ a["Date"] }}</td>
+<td>{{ a["Status"] }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+<div class="card">
+<h2>Payroll Records</h2>
+<table>
+<tr><th>ID</th><th>Name</th><th>Month</th><th>Total Paid</th></tr>
+{% for p in payroll %}
+<tr>
+<td>{{ p["Employee_ID"] }}</td>
+<td>{{ p["Name"] }}</td>
+<td>{{ p["Month"] }}</td>
+<td>{{ p["Total_Paid"] }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+<div class="card">
+<h2>Performance Records</h2>
+<table>
+<tr><th>ID</th><th>Name</th><th>Rating</th><th>Remarks</th></tr>
+{% for p in performance %}
+<tr>
+<td>{{ p["Employee_ID"] }}</td>
+<td>{{ p["Name"] }}</td>
+<td>{{ p["Rating"] }}</td>
+<td>{{ p["Remarks"] }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+</body>
+</html>
+
