@@ -6,13 +6,16 @@ import os
 app = Flask(__name__)
 app.secret_key = "inventory_secret_key"
 
-INVENTORY_FILE = "inventory.xlsx"
-SALES_FILE = "sales.xlsx"
-USERS_FILE = "users.xlsx"
-EMP_FILE = "employees.xlsx"
-ATT_FILE = "attendance.xlsx"
-PAY_FILE = "payroll.xlsx"
-PERF_FILE = "performance.xlsx"
+# ✅ IMPORTANT: make paths work on Render
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+INVENTORY_FILE = os.path.join(BASE_DIR, "inventory.xlsx")
+SALES_FILE = os.path.join(BASE_DIR, "sales.xlsx")
+USERS_FILE = os.path.join(BASE_DIR, "users.xlsx")
+EMP_FILE = os.path.join(BASE_DIR, "employees.xlsx")
+ATT_FILE = os.path.join(BASE_DIR, "attendance.xlsx")
+PAY_FILE = os.path.join(BASE_DIR, "payroll.xlsx")
+PERF_FILE = os.path.join(BASE_DIR, "performance.xlsx")
 
 
 # ---------------- DSS LOGIC ----------------
@@ -141,20 +144,18 @@ def hrm():
 
 @app.route("/add_employee", methods=["POST"])
 def add_employee():
-    emp_id = int(request.form["emp_id"])
-    name = request.form["name"]
-    role = request.form["role"]
-    salary = int(request.form["salary"])
-
     df = pd.read_excel(EMP_FILE)
-    df = pd.concat([df, pd.DataFrame([{
-        "Employee_ID": emp_id,
-        "Name": name,
-        "Role": role,
-        "Salary": salary
-    }])], ignore_index=True)
 
+    new_row = pd.DataFrame([{
+        "Employee_ID": int(request.form["emp_id"]),
+        "Name": request.form["name"],
+        "Role": request.form["role"],
+        "Salary": int(request.form["salary"])
+    }])
+
+    df = pd.concat([df, new_row], ignore_index=True)
     df.to_excel(EMP_FILE, index=False)
+
     return redirect("/hrm")
 
 
@@ -171,6 +172,7 @@ def mark_attendance():
 
     df = pd.concat([df, new], ignore_index=True)
     df.to_excel(ATT_FILE, index=False)
+
     return redirect("/hrm")
 
 
@@ -192,6 +194,7 @@ def process_payroll():
 
     df = pd.concat([df, new], ignore_index=True)
     df.to_excel(PAY_FILE, index=False)
+
     return redirect("/hrm")
 
 
@@ -208,7 +211,9 @@ def evaluate():
 
     df = pd.concat([df, new], ignore_index=True)
     df.to_excel(PERF_FILE, index=False)
+
     return redirect("/hrm")
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -284,11 +289,11 @@ def add():
 @app.route("/export_dss")
 def export_dss():
     dss = inventory_sales_dss()
-    dss.to_excel("dss_output.xlsx", index=False)
-    return "✅ DSS Output Exported to dss_output.xlsx"
+    output_path = os.path.join(BASE_DIR, "dss_output.xlsx")
+    dss.to_excel(output_path, index=False)
+    return "✅ DSS Output Exported"
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=5000)
 
