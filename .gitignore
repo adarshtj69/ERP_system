@@ -1,9 +1,32 @@
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# Virtual Environment
+venv/
+env/
+
+# Environment variables
 .env
+
+# Database files
+*.db
+*.sqlite3
+
+# Logs
 *.log
-Dockerfile
-*.xlsx
-dss_output.xlsx
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Docker
+.dockerignore
+
+# OS files
+.DS_Store
+Thumbs.db
